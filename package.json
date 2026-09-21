@@ -11,3 +11,4 @@
     "client": "npm --prefix frontend run dev"
   }
 }
+
