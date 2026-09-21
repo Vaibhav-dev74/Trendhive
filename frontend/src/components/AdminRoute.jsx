@@ -5,8 +5,19 @@ const AdminRoute = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
 
-  // ✅ Allow access only if the user is an admin
-  return user && user.isAdmin ? children : <Navigate to="/login" replace state={{ from: location }} />;
+  const isPrivileged =
+    user &&
+    (user.isAdmin ||
+      user.isShopkeeper ||
+      user.role === "shopkeeper" ||
+      user.role === "admin");
+
+  // ✅ Allow access if user is admin or shopkeeper; otherwise redirect to /admin/login
+  return isPrivileged ? (
+    children
+  ) : (
+    <Navigate to="/admin/login" replace state={{ from: location }} />
+  );
 };
 
 export default AdminRoute;

@@ -5,7 +5,7 @@ import generateToken from '../utils/generateToken.js';
 
 // ✅ Register User
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, isShopkeeper, shopName, address, shopAddress } = req.body;
 
     const userExists = await User.findOne({ email });
 
@@ -14,10 +14,17 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('User already exists');
     }
 
+    const role = isShopkeeper ? 'shopkeeper' : 'user';
+
     const user = await User.create({
         name,
         email,
-        password, // Will be hashed in `userSchema.pre('save')`
+        password,
+        role,
+        isShopkeeper: !!isShopkeeper,
+        shopName: shopName || "",
+        address: address || {},
+        shopAddress: shopAddress || {},
     });
 
     if (user) {
@@ -26,6 +33,11 @@ const registerUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin,
+            isShopkeeper: user.isShopkeeper,
+            role: user.role,
+            shopName: user.shopName,
+            address: user.address,
+            shopAddress: user.shopAddress,
             token: generateToken(user._id),
         });
     } else {
@@ -34,27 +46,17 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 });
 
-// ✅ Login User
+// ✅ Customer Login
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    console.log("🔹 Login Request - Email:", email);
-
     const user = await User.findOne({ email });
 
     if (!user) {
-        console.log("❌ User not found");
         res.status(401);
         throw new Error('Invalid email or password');
     }
 
-    console.log("✅ User Found:", user);
-
-    // Debug password comparison
-    console.log("🔹 Entered Password:", password);
-    console.log("🔹 Stored Hashed Password:", user.password);
-
     const isMatch = await user.matchPassword(password);
-    console.log("🔹 Password Match Result:", isMatch);
 
     if (isMatch) {
         res.json({
@@ -62,13 +64,55 @@ const loginUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin,
+            isShopkeeper: user.isShopkeeper,
+            role: user.role,
+            shopName: user.shopName,
+            address: user.address,
+            shopAddress: user.shopAddress,
             token: generateToken(user._id),
         });
     } else {
-        console.log("❌ Incorrect password");
         res.status(401);
         throw new Error('Invalid email or password');
     }
+});
+
+// ✅ Dedicated Shopkeeper & Admin Login
+const adminLoginUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        res.status(401);
+        throw new Error('Invalid credentials');
+    }
+
+    const isMatch = await user.matchPassword(password);
+
+    if (!isMatch) {
+        res.status(401);
+        throw new Error('Invalid credentials');
+    }
+
+    // Verify shopkeeper or admin privileges
+    const hasPrivilege = user.isAdmin || user.isShopkeeper || user.role === 'shopkeeper' || user.role === 'admin';
+    if (!hasPrivilege) {
+        res.status(403);
+        throw new Error('Access Denied: This portal is exclusively for registered Shopkeepers and Administrators. Please use the Customer Login.');
+    }
+
+    res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        isShopkeeper: user.isShopkeeper,
+        role: user.role,
+        shopName: user.shopName,
+        address: user.address,
+        shopAddress: user.shopAddress,
+        token: generateToken(user._id),
+    });
 });
 
 // ✅ Get User Profile
@@ -81,6 +125,11 @@ const getUserProfile = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin,
+            isShopkeeper: user.isShopkeeper,
+            role: user.role,
+            shopName: user.shopName,
+            address: user.address,
+            shopAddress: user.shopAddress,
         });
     } else {
         res.status(404);
@@ -96,8 +145,34 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
 
+        if (req.body.shopName !== undefined) {
+            user.shopName = req.body.shopName;
+        }
+
+        if (req.body.address) {
+            user.address = {
+                street: req.body.address.street ?? user.address?.street ?? "",
+                city: req.body.address.city ?? user.address?.city ?? "",
+                state: req.body.address.state ?? user.address?.state ?? "",
+                postalCode: req.body.address.postalCode ?? user.address?.postalCode ?? "",
+                country: req.body.address.country ?? user.address?.country ?? "India",
+                phone: req.body.address.phone ?? user.address?.phone ?? "",
+            };
+        }
+
+        if (req.body.shopAddress) {
+            user.shopAddress = {
+                street: req.body.shopAddress.street ?? user.shopAddress?.street ?? "",
+                city: req.body.shopAddress.city ?? user.shopAddress?.city ?? "",
+                state: req.body.shopAddress.state ?? user.shopAddress?.state ?? "",
+                postalCode: req.body.shopAddress.postalCode ?? user.shopAddress?.postalCode ?? "",
+                country: req.body.shopAddress.country ?? user.shopAddress?.country ?? "India",
+                phone: req.body.shopAddress.phone ?? user.shopAddress?.phone ?? "",
+            };
+        }
+
         if (req.body.password) {
-            user.password = req.body.password; // Will be hashed in `userSchema.pre('save')`
+            user.password = req.body.password;
         }
 
         const updatedUser = await user.save();
@@ -107,6 +182,11 @@ const updateUserProfile = asyncHandler(async (req, res) => {
             name: updatedUser.name,
             email: updatedUser.email,
             isAdmin: updatedUser.isAdmin,
+            isShopkeeper: updatedUser.isShopkeeper,
+            role: updatedUser.role,
+            shopName: updatedUser.shopName,
+            address: updatedUser.address,
+            shopAddress: updatedUser.shopAddress,
             token: generateToken(updatedUser._id),
         });
     } else {
@@ -115,4 +195,4 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     }
 });
 
-export { registerUser, loginUser, getUserProfile, updateUserProfile };
+export { registerUser, loginUser, adminLoginUser, getUserProfile, updateUserProfile };

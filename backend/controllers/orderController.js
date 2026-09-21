@@ -62,4 +62,20 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     }
 });
 
-export { createOrder, getOrderById, updateOrderToPaid };
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private/Admin
+const getOrders = asyncHandler(async (req, res) => {
+    const orders = await Order.find({}).populate('user', 'id name email').sort({ createdAt: -1 });
+    res.json(orders);
+});
+
+// @desc    Get logged in user orders
+// @route   GET /api/orders/myorders
+// @access  Private
+const getMyOrders = asyncHandler(async (req, res) => {
+    const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+    res.json(orders);
+});
+
+export { createOrder, getOrderById, updateOrderToPaid, getOrders, getMyOrders };

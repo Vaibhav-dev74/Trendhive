@@ -2,6 +2,7 @@ import express from 'express';
 import { 
     registerUser, 
     loginUser, 
+    adminLoginUser,
     getUserProfile, 
     updateUserProfile 
 } from '../controllers/userController.js';
@@ -14,6 +15,7 @@ const router = express.Router();
 // ✅ Public Routes
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.post('/admin-login', adminLoginUser);
 
 // ✅ Protected User Routes
 router.get('/profile', protect, getUserProfile);

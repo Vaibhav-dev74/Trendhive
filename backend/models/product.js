@@ -23,6 +23,22 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    category: {
+      type: String,
+      default: "General",
+    },
+    brand: {
+      type: String,
+      default: "Generic",
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    shopName: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

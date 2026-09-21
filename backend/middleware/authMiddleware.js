@@ -26,7 +26,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
 // ✅ Middleware for admin access
 const admin = (req, res, next) => {
-    if (req.user && req.user.isAdmin) {
+    if (req.user && (req.user.isAdmin || req.user.role === 'admin')) {
         next();
     } else {
         res.status(403);
@@ -34,4 +34,14 @@ const admin = (req, res, next) => {
     }
 };
 
-export { protect, admin };
+// ✅ Middleware for admin or shopkeeper access
+const adminOrShopkeeper = (req, res, next) => {
+    if (req.user && (req.user.isAdmin || req.user.isShopkeeper || req.user.role === 'shopkeeper' || req.user.role === 'admin')) {
+        next();
+    } else {
+        res.status(403);
+        throw new Error('Not authorized as an admin or shopkeeper');
+    }
+};
+
+export { protect, admin, adminOrShopkeeper };
