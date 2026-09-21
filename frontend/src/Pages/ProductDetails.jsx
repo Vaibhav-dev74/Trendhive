@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useCart } from "../context/CartContext";
 import { ArrowLeft, ShoppingCart, Check, AlertTriangle, Store, MapPin } from "lucide-react";
 
@@ -19,17 +20,13 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/products/${id}`);
-        if (!res.ok) {
-          throw new Error("Product not found");
-        }
-        const data = await res.json();
+        const { data } = await axios.get(`/api/products/${id}`);
         if (mounted) {
           setProduct(data);
         }
       } catch (err) {
         if (mounted) {
-          setError(err.message || "Failed to load product");
+          setError(err.response?.data?.message || err.message || "Failed to load product");
         }
       } finally {
         if (mounted) {

@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
@@ -11,8 +14,12 @@ import uploadRoutes from './routes/uploadRoutes.js';
 
 dotenv.config();
 
-const app = express(); // Initialize Express
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -23,12 +30,22 @@ const connectDB = async () => {
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`❌ MongoDB Connection Error: ${error.message}`);
-    process.exit(1); // Exit process if connection fails
+    process.exit(1);
   }
 };
 connectDB();
 
-// Routes
+// Health check endpoint for cloud hosting platforms (Render, Railway, Uptime monitors)
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'TrendHive API is running',
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// API Routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/payment', paymentRoutes);
@@ -36,13 +53,25 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/upload', uploadRoutes);
 
 // Static uploads folder
-const __dirname = path.resolve();
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Handle 404 Errors
-app.use((req, res, next) => {
-  res.status(404).json({ message: 'Not Found' });
-});
+// Serve frontend in production if built together
+const frontendDist = path.join(__dirname, '../frontend/dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.resolve(frontendDist, 'index.html'));
+    } else {
+      res.status(404).json({ message: 'API route not found' });
+    }
+  });
+} else {
+  // Handle 404 for API routes
+  app.use((req, res) => {
+    res.status(404).json({ message: 'Not Found' });
+  });
+}
 
 // Global Error Handler
 app.use((err, req, res, next) => {

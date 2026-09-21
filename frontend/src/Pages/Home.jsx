@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
   useEffect(() => {
-    fetch("/api/products/featured")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setFeaturedProducts(Array.isArray(data) ? data : []))
+    axios
+      .get("/api/products/featured")
+      .then((res) => setFeaturedProducts(Array.isArray(res.data) ? res.data : []))
       .catch((err) => {
         console.error(err);
         setFeaturedProducts([]);

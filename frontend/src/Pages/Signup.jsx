@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -19,21 +20,12 @@ const Signup = () => {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/users/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        login(data.user || data);
-        navigate("/");
-      } else {
-        setError(data.message || "Failed to sign up");
-      }
+      const { data } = await axios.post("/api/users/register", userData);
+      login(data.user || data);
+      navigate("/");
     } catch (err) {
       console.error("Signup error:", err);
-      setError("Network error. Please try again.");
+      setError(err.response?.data?.message || err.message || "Failed to sign up");
     } finally {
       setLoading(false);
     }

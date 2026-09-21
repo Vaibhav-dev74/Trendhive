@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
@@ -18,17 +19,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Invalid email or password");
-      }
+      const { data } = await axios.post("/api/users/login", credentials);
 
       login(data);
 
@@ -38,7 +29,7 @@ const Login = () => {
         navigate(redirectPath);
       }
     } catch (err) {
-      setError(err.message || "Failed to log in");
+      setError(err.response?.data?.message || err.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
