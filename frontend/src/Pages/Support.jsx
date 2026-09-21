@@ -203,13 +203,18 @@ const Support = () => {
           <div className="w-12 h-12 rounded-2xl bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center">
             <Phone className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-gray-900 dark:text-white">Direct Helpline</h3>
+          <h3 className="text-base font-bold text-gray-900 dark:text-white">Customer Helpline</h3>
           <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-            Speak directly with our logistics team for urgent in-transit delivery updates.
+            Phone assistance is being upgraded. Please use our 24/7 Email or the Support Request form below for fast resolution.
           </p>
-          <span className="block text-xs font-bold text-green-600 dark:text-green-400">
-            +91 98765 43210 (9 AM - 8 PM)
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono font-bold text-gray-500 dark:text-gray-400">
+              1800-XXX-XXXX
+            </span>
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+              Coming Soon
+            </span>
+          </div>
         </div>
 
         <div className="p-6 bg-white border border-gray-100 rounded-3xl shadow-sm dark:bg-gray-800 dark:border-gray-700 space-y-3">
@@ -543,3 +548,4 @@ const Support = () => {
 };
 
 export default Support;
+

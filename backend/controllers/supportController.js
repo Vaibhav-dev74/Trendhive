@@ -72,3 +72,4 @@ const updateTicketStatus = asyncHandler(async (req, res) => {
 });
 
 export { createTicket, getMyTickets, getAllTickets, updateTicketStatus };
+

@@ -34,3 +34,4 @@ router.get('/', protect, admin, getAllTickets);
 router.put('/:id/status', protect, admin, updateTicketStatus);
 
 export default router;
+

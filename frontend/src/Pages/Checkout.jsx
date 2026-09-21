@@ -410,7 +410,7 @@ const Checkout = () => {
                     <input
                       type="tel"
                       required
-                      placeholder="e.g. +91 98765 43210"
+                      placeholder="e.g. +91 98XXXXXXXX"
                       value={address.phone}
                       onChange={(e) => setAddress({ ...address, phone: e.target.value })}
                       className="w-full p-2.5 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
