@@ -357,9 +357,10 @@ const Home = () => {
                 "TrendHive Official";
 
               return (
-                <div
+                <motion.div
                   key={product._id}
-                  className="group flex flex-col justify-between p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-sm hover:shadow-xl transition duration-300"
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  className="group flex flex-col justify-between p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-sm hover:shadow-2xl transition duration-300"
                 >
                   <div>
                     {/* Image */}
@@ -367,11 +368,22 @@ const Home = () => {
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="object-contain w-full h-full p-2 group-hover:scale-105 transition duration-500"
+                        className="object-contain w-full h-full p-2 group-hover:scale-108 transition duration-500"
                       />
                       {/* Category Tag */}
                       <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 text-[11px] font-semibold bg-white/90 dark:bg-gray-900/90 text-gray-800 dark:text-gray-200 rounded-full shadow-sm backdrop-blur-sm">
                         {product.category || "General"}
+                      </span>
+
+                      {/* Stock badge */}
+                      <span
+                        className={`absolute top-2.5 right-2.5 px-2 py-0.5 text-[10px] font-bold rounded-full backdrop-blur-sm ${
+                          product.countInStock > 0
+                            ? "bg-green-100/90 text-green-700 dark:bg-green-900/50 dark:text-green-300"
+                            : "bg-red-100/90 text-red-700 dark:bg-red-900/50 dark:text-red-300"
+                        }`}
+                      >
+                        {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
                       </span>
                     </div>
 
@@ -391,21 +403,28 @@ const Home = () => {
                   </div>
 
                   <div>
-                    {/* Price & Stock */}
+                    {/* Price & Rating */}
                     <div className="flex items-baseline justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
-                      <span className="text-lg font-black text-gray-900 dark:text-white">
-                        ₹{product.price?.toLocaleString("en-IN")}
-                      </span>
-                      <span className="text-[11px] font-medium text-green-600 dark:text-green-400">
-                        {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
-                      </span>
+                      <div>
+                        <span className="text-lg font-black text-gray-900 dark:text-white">
+                          ₹{product.price?.toLocaleString("en-IN")}
+                        </span>
+                        <div className="text-[10px] text-gray-400">
+                          {product.countInStock > 0 ? `${product.countInStock} available` : "Sold out"}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 text-xs font-semibold text-gray-600 dark:text-gray-300">
+                        <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                        <span>4.8</span>
+                      </div>
                     </div>
 
                     {/* Action Buttons */}
                     <div className="grid grid-cols-2 gap-2 mt-3">
                       <Link
                         to={`/products/${product._id}`}
-                        className="py-2 text-center text-xs font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition"
+                        className="py-2 text-center text-xs font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition"
                       >
                         Details
                       </Link>
@@ -413,10 +432,10 @@ const Home = () => {
                       <button
                         onClick={() => handleQuickAdd(product)}
                         disabled={product.countInStock <= 0}
-                        className={`py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1 transition ${
+                        className={`py-2 text-xs font-semibold rounded-xl flex items-center justify-center gap-1 transition active:scale-95 shadow-md ${
                           isAdded
-                            ? "bg-green-600 text-white"
-                            : "bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+                            ? "bg-green-600 text-white shadow-green-600/20"
+                            : "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20 disabled:opacity-50"
                         }`}
                       >
                         {isAdded ? (
@@ -431,7 +450,7 @@ const Home = () => {
                       </button>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
