@@ -58,6 +58,34 @@ const orderSchema = mongoose.Schema(
     deliveredAt: {
       type: Date,
     },
+    orderStatus: {
+      type: String,
+      enum: ['Order Placed', 'Confirmed', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled'],
+      default: 'Order Placed',
+    },
+    trackingNumber: {
+      type: String,
+      default: function () {
+        return 'TH-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+      },
+    },
+    carrier: {
+      type: String,
+      default: 'TrendHive Express',
+    },
+    estimatedDelivery: {
+      type: Date,
+      default: function () {
+        return new Date(Date.now() + 4 * 24 * 60 * 60 * 1000); // 4 days delivery default
+      },
+    },
+    statusHistory: [
+      {
+        status: { type: String, required: true },
+        timestamp: { type: Date, default: Date.now },
+        note: { type: String, default: '' },
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -23,13 +23,19 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-white">Explore</h4>
+            <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-white">Help & Explore</h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link to="/" className="hover:text-white transition">Home</Link>
+                <Link to="/products" className="hover:text-white transition">All Products</Link>
               </li>
               <li>
-                <Link to="/products" className="hover:text-white transition">All Products</Link>
+                <Link to="/orders" className="hover:text-white transition">Purchased History</Link>
+              </li>
+              <li>
+                <Link to="/track-order" className="hover:text-white transition">Live Order Tracker</Link>
+              </li>
+              <li>
+                <Link to="/support" className="hover:text-white transition">Customer Support & FAQs</Link>
               </li>
               <li>
                 <Link to="/cart" className="hover:text-white transition">Shopping Cart</Link>

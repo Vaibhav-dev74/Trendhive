@@ -33,6 +33,8 @@ const Navbar = () => {
           {/* Right: desktop menu */}
           <div className="items-center hidden gap-4 md:flex">
             <Link to="/products" className="hover:text-gray-300">Products</Link>
+            <Link to="/track-order" className="hover:text-gray-300">Track Order</Link>
+            <Link to="/support" className="hover:text-gray-300">Support</Link>
             <Link to="/cart" className="hover:text-gray-300">Cart</Link>
 
             {isPrivileged && (
@@ -47,6 +49,7 @@ const Navbar = () => {
 
             {user ? (
               <>
+                <Link to="/orders" className="hover:text-gray-300">My Orders</Link>
                 <Link to="/profile" className="hover:text-gray-300">Profile</Link>
                 <span className="text-sm text-gray-300">
                   Hi, {user.name} {user.isShopkeeper && <span className="text-xs bg-yellow-500/20 text-yellow-300 px-1.5 py-0.5 rounded ml-1">Seller</span>}
@@ -83,6 +86,8 @@ const Navbar = () => {
       {open && (
         <div className="px-4 pb-4 space-y-2 md:hidden">
           <Link to="/products" onClick={() => setOpen(false)} className="block">Products</Link>
+          <Link to="/track-order" onClick={() => setOpen(false)} className="block">Track Order</Link>
+          <Link to="/support" onClick={() => setOpen(false)} className="block">Customer Support</Link>
           <Link to="/cart" onClick={() => setOpen(false)} className="block">Cart</Link>
 
           {isPrivileged && (
@@ -101,6 +106,7 @@ const Navbar = () => {
           {user ? (
             <>
               <div className="text-sm text-gray-300">Welcome, {user.name}</div>
+              <Link to="/orders" onClick={() => setOpen(false)} className="block">My Orders</Link>
               <Link to="/profile" onClick={() => setOpen(false)} className="block">Profile</Link>
               <button onClick={() => { logout(); setOpen(false); }} className="w-full text-left text-red-400">Logout</button>
             </>

@@ -246,19 +246,27 @@ const Checkout = () => {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              to="/products"
+              to={`/track-order?id=${completedOrder._id}`}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition shadow-lg shadow-blue-600/20 text-sm"
             >
-              <ShoppingBag className="w-4 h-4" />
-              <span>Continue Shopping</span>
+              <Truck className="w-4 h-4" />
+              <span>Track Order Delivery</span>
             </Link>
 
             <Link
-              to="/profile"
+              to="/orders"
               className="inline-flex items-center justify-center gap-2 px-5 py-3 font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-xl transition text-sm"
             >
               <Package className="w-4 h-4" />
-              <span>View Account</span>
+              <span>View Purchased History</span>
+            </Link>
+
+            <Link
+              to="/products"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 font-semibold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition text-sm"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              <span>Continue Shopping</span>
             </Link>
           </div>
         </motion.div>

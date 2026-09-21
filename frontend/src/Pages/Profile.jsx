@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { User, MapPin, Store, CheckCircle, AlertCircle } from 'lucide-react';
+import { User, MapPin, Store, CheckCircle, AlertCircle, Package } from 'lucide-react';
 
 const Profile = () => {
   const { user, login } = useAuth();
@@ -126,6 +127,13 @@ const Profile = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Link
+            to="/orders"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 rounded-xl transition"
+          >
+            <Package className="w-3.5 h-3.5" />
+            <span>My Orders</span>
+          </Link>
           {user?.isAdmin && (
             <span className="px-3 py-1 text-xs font-semibold text-purple-700 bg-purple-100 rounded-full dark:bg-purple-900/40 dark:text-purple-300">
               Administrator

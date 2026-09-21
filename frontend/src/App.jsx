@@ -9,6 +9,9 @@ import Cart from "./Pages/Cart";
 import Signup from "./Pages/Signup";
 import Login from "./Pages/Login";
 import Profile from "./Pages/Profile";
+import Orders from "./Pages/Orders";
+import TrackOrder from "./Pages/TrackOrder";
+import Support from "./Pages/Support";
 import NotFound from "./Pages/NotFound";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
@@ -41,6 +44,10 @@ function App() {
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/track-order/:id" element={<TrackOrder />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/contact" element={<Support />} />
 
           {/* ✅ Protected User Routes */}
           <Route
@@ -48,6 +55,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <PrivateRoute>
+                <Orders />
               </PrivateRoute>
             }
           />
