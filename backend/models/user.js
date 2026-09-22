@@ -27,6 +27,14 @@ const userSchema = mongoose.Schema(
             type: addressSchema,
             default: () => ({}),
         },
+        resetPasswordCode: {
+            type: String,
+            default: null,
+        },
+        resetPasswordExpires: {
+            type: Date,
+            default: null,
+        },
     },
     { timestamps: true }
 );

@@ -195,4 +195,80 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     }
 });
 
-export { registerUser, loginUser, adminLoginUser, getUserProfile, updateUserProfile };
+// @desc    Request password reset code
+// @route   POST /api/users/forgot-password
+// @access  Public
+const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    if (!email) {
+        res.status(400);
+        throw new Error('Please provide an email address');
+    }
+
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    if (!user) {
+        res.status(404);
+        throw new Error('No registered account found with this email address');
+    }
+
+    // Generate 6-digit random code
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    user.resetPasswordCode = resetCode;
+    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 minutes validity
+    await user.save();
+
+    res.json({
+        success: true,
+        message: 'Password reset verification code generated.',
+        email: user.email,
+        resetCode: resetCode,
+    });
+});
+
+// @desc    Reset password using verification code
+// @route   POST /api/users/reset-password
+// @access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+    const { email, code, newPassword } = req.body;
+
+    if (!email || !code || !newPassword) {
+        res.status(400);
+        throw new Error('Please provide email, verification code, and new password');
+    }
+
+    if (newPassword.length < 6) {
+        res.status(400);
+        throw new Error('Password must be at least 6 characters');
+    }
+
+    const user = await User.findOne({
+        email: email.trim().toLowerCase(),
+        resetPasswordCode: code.trim(),
+        resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+        res.status(400);
+        throw new Error('Invalid or expired verification code. Please request a new one.');
+    }
+
+    user.password = newPassword;
+    user.resetPasswordCode = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({
+        success: true,
+        message: 'Password reset successfully! You can now log in with your new password.',
+    });
+});
+
+export {
+    registerUser,
+    loginUser,
+    adminLoginUser,
+    getUserProfile,
+    updateUserProfile,
+    forgotPassword,
+    resetPassword,
+};

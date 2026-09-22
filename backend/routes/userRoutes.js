@@ -4,7 +4,9 @@ import {
     loginUser, 
     adminLoginUser,
     getUserProfile, 
-    updateUserProfile 
+    updateUserProfile,
+    forgotPassword,
+    resetPassword,
 } from '../controllers/userController.js';
 
 import { protect, admin } from '../middleware/authMiddleware.js';
@@ -16,6 +18,8 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/admin-login', adminLoginUser);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 // ✅ Protected User Routes
 router.get('/profile', protect, getUserProfile);

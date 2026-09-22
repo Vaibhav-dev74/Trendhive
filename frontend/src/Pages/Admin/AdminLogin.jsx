@@ -112,9 +112,17 @@ const AdminLogin = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1">
-              Password
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                Password
+              </label>
+              <Link
+                to="/forgot-password"
+                className="text-xs font-medium text-yellow-600 dark:text-yellow-400 hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
             <div className="relative">
               <Lock className="w-5 h-5 absolute left-3 top-2.5 text-gray-400" />
               <input

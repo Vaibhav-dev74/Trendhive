@@ -8,6 +8,7 @@ import Payment from "./components/Payment";
 import Cart from "./Pages/Cart";
 import Signup from "./Pages/Signup";
 import Login from "./Pages/Login";
+import ForgotPassword from "./Pages/ForgotPassword";
 import Profile from "./Pages/Profile";
 import Orders from "./Pages/Orders";
 import TrackOrder from "./Pages/TrackOrder";
@@ -44,6 +45,7 @@ function App() {
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/track-order/:id" element={<TrackOrder />} />
           <Route path="/support" element={<Support />} />

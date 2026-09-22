@@ -30,14 +30,23 @@ const cardVariants = {
   },
 };
 
+const DEFAULT_CATEGORIES = [
+  "Electronics",
+  "Fashion",
+  "Footwear",
+  "Home & Living",
+  "Gaming",
+  "Accessories",
+];
+
 const Products = () => {
   const [searchParams] = useSearchParams();
   const categoryParam = searchParams.get("category");
 
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(categoryParam || "All");
+  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const [activeCategory, setActiveCategory] = useState(categoryParam?.trim() || "All");
   const [sortBy, setSortBy] = useState("default");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -46,7 +55,9 @@ const Products = () => {
 
   useEffect(() => {
     if (categoryParam) {
-      setActiveCategory(categoryParam);
+      setActiveCategory(categoryParam.trim());
+    } else {
+      setActiveCategory("All");
     }
   }, [categoryParam]);
 
@@ -58,13 +69,17 @@ const Products = () => {
         setLoading(true);
         const data = await fetchProducts();
         if (!mounted) return;
-        setProducts(Array.isArray(data) ? data : []);
-        setFiltered(Array.isArray(data) ? data : []);
+        const list = Array.isArray(data) ? data : [];
+        setProducts(list);
+        setFiltered(list);
 
-        const cats = Array.from(
-          new Set((data || []).map((p) => (p.category ? p.category : "General")))
+        const extractedCats = Array.from(
+          new Set(list.map((p) => (p.category ? p.category.trim() : "General")))
         );
-        setCategories(cats);
+        const combined = Array.from(
+          new Set([...DEFAULT_CATEGORIES, ...extractedCats])
+        ).filter(Boolean);
+        setCategories(combined);
       } catch (err) {
         console.error("Fetch products error:", err);
         setError("Failed to load products from marketplace.");
@@ -82,9 +97,11 @@ const Products = () => {
   useEffect(() => {
     let result = [...products];
 
-    if (activeCategory !== "All") {
+    if (activeCategory && activeCategory !== "All") {
       result = result.filter(
-        (p) => (p.category || "General").toLowerCase() === activeCategory.toLowerCase()
+        (p) =>
+          (p.category || "General").trim().toLowerCase() ===
+          activeCategory.trim().toLowerCase()
       );
     }
 
