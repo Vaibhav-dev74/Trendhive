@@ -203,16 +203,11 @@ const Support = () => {
           <div className="flex items-center justify-center w-12 h-12 text-green-600 rounded-2xl bg-green-50 dark:bg-green-900/30 dark:text-green-400">
             <Phone className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-gray-900 dark:text-white">Direct Helpline</h3>
           <h3 className="text-base font-bold text-gray-900 dark:text-white">Customer Helpline</h3>
           <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
-            Speak directly with our logistics team for urgent in-transit delivery updates.
-            Phone assistance is being upgraded. Please use our 24/7 Email or the Support Request form below for fast resolution.
+            Direct phone assistance is currently being upgraded. Please use our 24/7 Email or submit a support ticket below for fast assistance.
           </p>
-          <span className="block text-xs font-bold text-green-600 dark:text-green-400">
-            +91 98765 43210 (9 AM - 8 PM)
-          </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 pt-1">
             <span className="font-mono text-xs font-bold text-gray-500 dark:text-gray-400">
               1800-XXX-XXXX
             </span>

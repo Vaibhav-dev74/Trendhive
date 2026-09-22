@@ -59,7 +59,7 @@ const users = [
       state: "Karnataka",
       postalCode: "560001",
       country: "India",
-      phone: "+91 98765 43210",
+      phone: "+91 99999 00000",
     },
     shopAddress: {
       street: "Shop 12-B, Commercial Street, Brigade Cross",
